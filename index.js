@@ -31,10 +31,11 @@ async function run() {
    try {
       const usersCollection = client.db('roosuDb').collection('users');
 
-
       app.post('/users', async (req, res) => {
          const user = req.body;
-         const query = { email: user.email };
+         const query = {
+            email: user.email
+         };
          const existingUser = await usersCollection.findOne(query);
          if (existingUser) {
             return res.send({ message: 'user already exists' });
@@ -60,5 +61,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(port, () => {
-   console.log(`AirCNC is running on port ${port}`);
+   console.log(`Raosu summer photography school is running on ${port}`);
 });
