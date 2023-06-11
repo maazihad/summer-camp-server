@@ -106,16 +106,16 @@ async function run() {
          res.send(result);
       });
       // ================>>>check is admin ?<<<===================
-      // app.get('/users/admin/:email', verifyJWT, async (req, res) => {
-      //    const email = req.params.email;
-      //    if (req.decoded.email !== email) {
-      //       return res.send({ admin: false });
-      //    }
-      //    const query = { email: email };
-      //    const user = await usersCollection.findOne(query);
-      //    const result = { admin: user?.role === 'admin' };
-      //    res.send(result);
-      // });
+      app.get('/users/admin/:email', verifyJWT, async (req, res) => {
+         const email = req.params.email;
+         if (req.decoded.email !== email) {
+            return res.send({ admin: false });
+         }
+         const query = { email: email };
+         const user = await usersCollection.findOne(query);
+         const result = { admin: user?.role === 'admin' };
+         res.send(result);
+      });
       // ================>>>Storing Users In Database<<<===================
       // app.post('/allUsers', async (req, res) => {
       //    const user = req.body;
