@@ -50,15 +50,15 @@ async function run() {
       // ================>>>Collections<<<===================
       const infoCollections = client.db('raosuDb').collection('allInfo');
       const sliderCollections = client.db('raosuDb').collection('bannerSlider');
-
+      const allUserCollections = client.db('raosuDb').collection('allUsers');
 
       // ================>>>generate JWT<<<===================
-      // app.post('/jwt', (req, res) => {
-      //    const email = req.body;
-      //    const token = jwt.sign(email, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15d' });
-      //    // console.log(token);
-      //    res.send({ token });
-      // });
+      app.post('/jwt', (req, res) => {
+         const email = req.body;
+         const token = jwt.sign(email, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15d' });
+         // console.log(token);
+         res.send({ token });
+      });
       // ================>>>Admin Verify<<<===================
       // const verifyAdmin = async (req, res, next) => {
       //    const email = req.decoded.email;
@@ -101,10 +101,10 @@ async function run() {
       */
 
       // ================>>>Get All Users<<<===================
-      // app.get("/allUsers", verifyJWT, verifyAdmin, async (req, res) => {
-      //    const result = await allUserCollections.find().toArray();
-      //    res.send(result);
-      // });
+      app.get("/allUsers", verifyJWT, verifyAdmin, async (req, res) => {
+         const result = await allUserCollections.find().toArray();
+         res.send(result);
+      });
       // ================>>>check is admin ?<<<===================
       // app.get('/users/admin/:email', verifyJWT, async (req, res) => {
       //    const email = req.params.email;
