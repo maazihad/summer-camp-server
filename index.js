@@ -1,12 +1,15 @@
 const express = require('express');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 const app = express();
+
 const port = process.env.PORT || 5999;
 
-// middleware
+
+//======>>>>>>>>>>>>>>>Middleware<<<<<<<<<<<<<<<<<<<<<<<<<
 const corsOptions = {
    origin: '*',
    credentials: true,
@@ -55,11 +58,11 @@ async function run() {
       // ================>>>generate JWT<<<===================
       app.post('/jwt', (req, res) => {
          const email = req.body;
-         const token = jwt.sign(email, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15d' });
+         const token = jwt.sign(email, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '7h' });
          // console.log(token);
          res.send({ token });
       });
-      ================>>> Admin Verify <<<===================
+      // ================>>> Admin Verify <<<===================
       const verifyAdmin = async (req, res, next) => {
          const email = req.decoded.email;
          const query = { email: email };
@@ -100,11 +103,41 @@ async function run() {
          =====================================================
       */
 
+
+
+
+      // //===============get user
+      // app.get('/users/:email', async (req, res) => {
+      //    const email = req.params.email;
+      //    const query = { email: email };
+      //    const result = await usersCollection.findOne(query);
+      //    res.send(result);
+      // });
+
+
       // ================>>>Get All Users<<<===================
       app.get("/allUsers", verifyJWT, verifyAdmin, async (req, res) => {
          const result = await allUserCollections.find().toArray();
          res.send(result);
       });
+
+      // save user route=====================================================
+      app.put('/allUsers/:email', async (req, res) => {
+         const email = req.params.email;
+         console.log(email);
+         const user = req.body;
+         const query = { email: email };
+         const options = {
+            upsert: true
+         };
+         const updateDoc = {
+            $set: user
+         };
+         const result = await allUserCollections.updateOne(query, updateDoc, options);
+         // console.log(result);
+         res.send(result);
+      });
+
       // ================>>>check is admin ?<<<===================
       app.get('/users/admin/:email', verifyJWT, async (req, res) => {
          const email = req.params.email;
