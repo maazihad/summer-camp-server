@@ -49,6 +49,7 @@ async function run() {
    try {
       // ================>>>Collections<<<===================
       const infoCollections = client.db('raosuDb').collection('allInfo');
+      const sliderCollections = client.db('raosuDb').collection('bannerSlider');
 
 
       // ================>>>generate JWT<<<===================
