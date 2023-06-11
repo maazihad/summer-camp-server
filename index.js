@@ -59,16 +59,16 @@ async function run() {
          // console.log(token);
          res.send({ token });
       });
-      // ================>>>Admin Verify<<<===================
-      // const verifyAdmin = async (req, res, next) => {
-      //    const email = req.decoded.email;
-      //    const query = { email: email };
-      //    const user = await allUserCollections.findOne(query);
-      //    if (user?.role !== 'admin') {
-      //       return res.status(403).send({ error: true, message: 'Access Deny' });
-      //    }
-      //    next();
-      // };
+      ================>>> Admin Verify <<<===================
+      const verifyAdmin = async (req, res, next) => {
+         const email = req.decoded.email;
+         const query = { email: email };
+         const user = await allUserCollections.findOne(query);
+         if (user?.role !== 'admin') {
+            return res.status(403).send({ error: true, message: 'Access Deny' });
+         }
+         next();
+      };
 
       app.get('/sliders', async (req, res) => {
          const result = await sliderCollections.find({}).toArray();
