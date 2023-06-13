@@ -178,10 +178,32 @@ async function run() {
          res.send(result);
       });
 
+      app.put('/add-classes/:id', verifyJWT, async (req, res) => {
+         const classItem = req.body;
+         console.log(classItem);
+         const filter = {
+            _id: new ObjectId(req.params.id)
+         };
+         const options = {
+            upsert: true
+         };
+         const updateDoc = {
+            $set: classItem,
+         };
+         const result = await infoCollections.updateOne(filter, updateDoc, options);
+         res.send(result);
+      });
+
       app.delete('/classes/:id', async (req, res) => {
          const id = req.params.id;
          const query = { _id: new ObjectId(id) };
          const result = await classesCollections.deleteOne(query);
+         res.send(result);
+      });
+      app.delete('/add-classes/:id', async (req, res) => {
+         const id = req.params.id;
+         const query = { _id: new ObjectId(id) };
+         const result = await infoCollections.deleteOne(query);
          res.send(result);
       });
 
