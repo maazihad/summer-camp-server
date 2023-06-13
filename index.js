@@ -134,6 +134,19 @@ async function run() {
       //                   >>>Class Page API's & Related API's<<<
       // ==========================================================================
 
+      app.get('/classes/:email', verifyJWT, async (req, res) => {
+         const email = req.params.email;
+         const decodedEmail = req.decoded.email;
+         if (decodedEmail !== email) {
+            return res.status(403).send({ error: 1, message: "forbidden access" });
+         };
+         const query = {
+            email: email
+         };
+         const result = await infoCollections.find(query).toArray();
+         res.send(result);
+      });
+
       app.get('/classes', verifyJWT, async (req, res) => {
          const email = req.query.email;
          if (!email) {
@@ -276,6 +289,13 @@ async function run() {
          const id = req.params.id;
          const query = { _id: new ObjectId(id) };
          const result = await userCollections.deleteOne(query);
+         res.send(result);
+      });
+
+
+      app.post('/add-class', async (req, res) => {
+         const addToClass = req.body;
+         const result = await infoCollections.insertOne(addToClass);
          res.send(result);
       });
 
