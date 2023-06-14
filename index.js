@@ -174,7 +174,7 @@ async function run() {
          res.send(result);
       });
 
-      app.post('/classes', verifyJWT, async (req, res) => {
+      app.post('/classes', verifyJWT, verifyAdmin, async (req, res) => {
          const item = req.body;
          console.log(item);
          const result = await classesCollections.insertOne(item);
@@ -205,7 +205,7 @@ async function run() {
          res.send(result);
       });
 
-      app.delete('/add-classes/:id', verifyJWT, async (req, res) => {
+      app.delete('/add-classes/:id', verifyJWT, verifyAdmin, async (req, res) => {
          const id = req.params.id;
          const query = { _id: new ObjectId(id) };
          const result = await infoCollections.deleteOne(query);
@@ -217,7 +217,7 @@ async function run() {
       //                          >>>Users API's<<<
       // ==========================================================================
 
-      app.get("/users", verifyJWT, async (req, res) => {
+      app.get("/users", verifyJWT, verifyAdmin, async (req, res) => {
          const result = await userCollections.find().toArray();
          res.send(result);
       });
