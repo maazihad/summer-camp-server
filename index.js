@@ -1,3 +1,7 @@
+//===========================================================================
+//                          >>>APP's require<<<
+// ==========================================================================
+
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -170,7 +174,7 @@ async function run() {
          res.send(result);
       });
 
-      app.post('/classes', async (req, res) => {
+      app.post('/classes', verifyJWT, async (req, res) => {
          const item = req.body;
          console.log(item);
          const result = await classesCollections.insertOne(item);
@@ -194,13 +198,14 @@ async function run() {
          res.send(result);
       });
 
-      app.delete('/classes/:id', async (req, res) => {
+      app.delete('/classes/:id', verifyJWT, async (req, res) => {
          const id = req.params.id;
          const query = { _id: new ObjectId(id) };
          const result = await classesCollections.deleteOne(query);
          res.send(result);
       });
-      app.delete('/add-classes/:id', async (req, res) => {
+
+      app.delete('/add-classes/:id', verifyJWT, async (req, res) => {
          const id = req.params.id;
          const query = { _id: new ObjectId(id) };
          const result = await infoCollections.deleteOne(query);
@@ -212,7 +217,7 @@ async function run() {
       //                          >>>Users API's<<<
       // ==========================================================================
 
-      app.get("/users", verifyJWT, verifyAdmin, async (req, res) => {
+      app.get("/users", verifyJWT, async (req, res) => {
          const result = await userCollections.find().toArray();
          res.send(result);
       });
@@ -239,7 +244,7 @@ async function run() {
       // ==========================================================================
 
 
-      app.get('/dashboard/payment-history', async (req, res) => {
+      app.get('/dashboard/payment-history', verifyJWT, async (req, res) => {
          const email = req.query.email;
          if (!email) {
             res.status(400).send('Email is required');
@@ -294,7 +299,7 @@ async function run() {
          res.send(result);
       });
 
-      app.patch('/users/admin/:id', async (req, res) => {
+      app.patch('/users/admin/:id', verifyJWT, async (req, res) => {
          const id = req.params.id;
          console.log(id);
          const filter = { _id: new ObjectId(id) };
@@ -307,7 +312,7 @@ async function run() {
          res.send(result);
       });
 
-      app.delete("/users/admin/:id", async (req, res) => {
+      app.delete("/users/admin/:id", verifyJWT, async (req, res) => {
          const id = req.params.id;
          const query = { _id: new ObjectId(id) };
          const result = await userCollections.deleteOne(query);
@@ -315,11 +320,12 @@ async function run() {
       });
 
 
-      app.post('/add-class', async (req, res) => {
+      app.post('/add-class', verifyJWT, async (req, res) => {
          const addToClass = req.body;
          const result = await infoCollections.insertOne(addToClass);
          res.send(result);
       });
+
 
 
 
@@ -339,7 +345,7 @@ async function run() {
          res.send(result);
       });
 
-      app.delete("/users/instructor/:id", async (req, res) => {
+      app.delete("/users/instructor/:id", verifyJWT, async (req, res) => {
          const id = req.params.id;
          const query = {
             _id: new ObjectId(id)
@@ -349,7 +355,7 @@ async function run() {
       });
 
 
-      app.patch('/users/instructor/:id', async (req, res) => {
+      app.patch('/users/instructor/:id', verifyJWT, async (req, res) => {
          const id = req.params.id;
          console.log(id);
          const filter = {
@@ -364,39 +370,6 @@ async function run() {
          res.send(result);
       });
 
-
-      // app.get('/order-stats', async (req, res) => {
-      //    const pipeline = [
-      //       {
-      //          $lookup: {
-      //             from: 'menu',
-      //             localField: 'menuItems',
-      //             foreignField: '_id',
-      //             as: 'menuItemsData'
-      //          }
-      //       },
-      //       {
-      //          $unwind: '$menuItemsData'
-      //       },
-      //       {
-      //          $group: {
-      //             _id: '$menuItemsData.category',
-      //             count: { $sum: 1 },
-      //             total: { $sum: '$menuItemsData.price' }
-      //          }
-      //       },
-      //       {
-      //          $project: {
-      //             category: '$_id',
-      //             count: 1,
-      //             total: { $round: ['$total', 2] },
-      //             _id: 0
-      //          }
-      //       }
-      //    ];
-      //    const result = await paymentCollections.aggregate(pipeline).toArray();
-      //    res.send(result);
-      // });
 
 
       // Send a ping to confirm a successful connection
