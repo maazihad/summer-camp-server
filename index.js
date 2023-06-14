@@ -174,17 +174,17 @@ async function run() {
          res.send(result);
       });
 
-      app.post('/classes', verifyJWT, verifyAdmin, async (req, res) => {
+      app.post('/classes', async (req, res) => {
          const item = req.body;
-         console.log(item);
+         // console.log(item);
          const result = await classesCollections.insertOne(item);
-         console.log(result);
+         // console.log(result);
          res.send(result);
       });
 
       app.put('/add-classes/:id', verifyJWT, async (req, res) => {
          const classItem = req.body;
-         console.log(classItem);
+         // console.log(classItem);
          const filter = {
             _id: new ObjectId(req.params.id)
          };
@@ -198,7 +198,7 @@ async function run() {
          res.send(result);
       });
 
-      app.delete('/classes/:id', verifyJWT, async (req, res) => {
+      app.delete('/classes/:id', async (req, res) => {
          const id = req.params.id;
          const query = { _id: new ObjectId(id) };
          const result = await classesCollections.deleteOne(query);
@@ -224,7 +224,7 @@ async function run() {
 
       app.put('/users/:email', async (req, res) => {
          const email = req.params.email;
-         console.log(email);
+         // console.log(email);
          const user = req.body;
          const query = { email: email };
          const options = {
@@ -244,8 +244,8 @@ async function run() {
       // ==========================================================================
 
 
-      app.get('/dashboard/payment-history', verifyJWT, async (req, res) => {
-         const email = req.query.email;
+      app.get('/dashboard/payment-history/:email', async (req, res) => {
+         const email = req.params.email;  // Use `req.params` instead of `req.query`
          if (!email) {
             res.status(400).send('Email is required');
             return;
@@ -288,7 +288,7 @@ async function run() {
       // ==========================================================================
 
 
-      app.get('/users/admin/:email', verifyJWT, async (req, res) => {
+      app.get('/users/admin/:email', verifyJWT, verifyAdmin, async (req, res) => {
          const email = req.params.email;
          if (req.decoded.email !== email) {
             return res.send({ admin: false });
@@ -299,9 +299,9 @@ async function run() {
          res.send(result);
       });
 
-      app.patch('/users/admin/:id', verifyJWT, async (req, res) => {
+      app.patch('/users/admin/:id', async (req, res) => {
          const id = req.params.id;
-         console.log(id);
+         // console.log(id);
          const filter = { _id: new ObjectId(id) };
          const updateDoc = {
             $set: {
@@ -312,7 +312,7 @@ async function run() {
          res.send(result);
       });
 
-      app.delete("/users/admin/:id", verifyJWT, async (req, res) => {
+      app.delete("/users/admin/:id", async (req, res) => {
          const id = req.params.id;
          const query = { _id: new ObjectId(id) };
          const result = await userCollections.deleteOne(query);
@@ -325,8 +325,6 @@ async function run() {
          const result = await infoCollections.insertOne(addToClass);
          res.send(result);
       });
-
-
 
 
       //===========================================================================
@@ -355,9 +353,9 @@ async function run() {
       });
 
 
-      app.patch('/users/instructor/:id', verifyJWT, async (req, res) => {
+      app.patch('/users/instructor/:id', async (req, res) => {
          const id = req.params.id;
-         console.log(id);
+         // console.log(id);
          const filter = {
             _id: new ObjectId(id)
          };
